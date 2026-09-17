@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Help Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== HEADER / HERO ==================== -->
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">
+        <span class="logo-icon" aria-hidden="true">🎓</span>
+        <div>
+          <h1 class="logo-title">Campus Help Hub</h1>
+          <p class="logo-subtitle">Peer-to-peer academic support for college students</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="pulse-dot"></span>
+        <span id="headerStats">Student Community Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="container main-layout">
+
+    <!-- LEFT COLUMN: ADD HELP REQUEST FORM -->
+    <section class="form-section" aria-labelledby="formHeading">
+      <div class="card form-card">
+        <div class="card-header">
+          <h2 id="formHeading" class="card-title">Ask for Help</h2>
+          <p class="card-description">
+            Need notes, have a doubt, or looking for a study buddy? Post your request below.
+          </p>
+        </div>
+
+        <form id="helpRequestForm" novalidate>
+          <!-- Student Name -->
+          <div class="form-group">
+            <label for="studentName">Student Name <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="studentName" 
+              name="studentName" 
+              placeholder="e.g., Alex Johnson" 
+              autocomplete="name"
+            >
+            <span class="error-text" id="nameError"></span>
+          </div>
+
+          <!-- Subject / Topic -->
+          <div class="form-group">
+            <label for="subject">Subject / Topic <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="subject" 
+              name="subject" 
+              placeholder="e.g., Data Structures, Organic Chemistry"
+            >
+            <span class="error-text" id="subjectError"></span>
+          </div>
+
+          <!-- Category Dropdown -->
+          <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <select id="category" name="category">
+              <option value="" disabled selected>Select a category</option>
+              <option value="Notes">Notes</option>
+              <option value="Doubt">Doubt</option>
+              <option value="Study Partner">Study Partner</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="error-text" id="categoryError"></span>
+          </div>
+
+          <!-- Priority Dropdown -->
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+              <option value="Normal" selected>Normal</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description">Description <span class="required">*</span></label>
+            <textarea 
+              id="description" 
+              name="description" 
+              rows="4" 
+              placeholder="Explain what specific concept you are stuck on or what help you are looking for..."
+            ></textarea>
+            <span class="error-text" id="descriptionError"></span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="submitBtn" class="btn btn-primary">
+            <span>+ Add Request</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: SEARCH, FILTERS & HELP REQUESTS LIST -->
+    <section class="feed-section" aria-labelledby="requestsHeading">
+      <!-- Toolbar: Title and Request Counters -->
+      <div class="toolbar">
+        <div>
+          <h2 id="requestsHeading" class="section-title">Help Requests</h2>
+          <p class="section-subtitle">Browse recent academic requests from fellow students</p>
+        </div>
+        <!-- Request Counters: Total, Active, Resolved -->
+        <div class="counters-container" aria-label="Request statistics">
+          <div class="counter-badge counter-total" title="Total requests posted">
+            <span class="counter-label">Total</span>
+            <span class="counter-value" id="totalCount">0</span>
+          </div>
+          <div class="counter-badge counter-active" title="Active requests waiting for help">
+            <span class="counter-label">Active</span>
+            <span class="counter-value" id="activeCount">0</span>
+          </div>
+          <div class="counter-badge counter-resolved" title="Resolved requests">
+            <span class="counter-label">Resolved</span>
+            <span class="counter-value" id="resolvedCount">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combined Filters Bar: Search + Category Filter + Status Filter -->
+      <div class="filters-bar">
+        <!-- Search Input Box -->
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search by subject or topic (e.g. Physics, Calculus)..." 
+            aria-label="Search requests by subject or topic"
+          >
+          <button type="button" id="clearSearchBtn" class="clear-search-btn" title="Clear search" aria-label="Clear search">✕</button>
+        </div>
+
+        <!-- Filter Dropdowns (Category & Status) -->
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label for="categoryFilter" class="sr-only">Filter by Category</label>
+            <select id="categoryFilter" class="filter-select" aria-label="Filter by Category">
+              <option value="All">All Categories</option>
+              <option value="Notes">Notes</option>
+              <option value="Doubt">Doubt</option>
+              <option value="Study Partner">Study Partner</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="statusFilter" class="sr-only">Filter by Status</label>
+            <select id="statusFilter" class="filter-select" aria-label="Filter by Status">
+              <option value="All">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container where request cards are dynamically injected by JavaScript -->
+      <div id="requestsContainer" class="requests-grid" role="region" aria-live="polite">
+        <!-- Cards will be rendered here by script.js -->
+      </div>
+
+      <!-- Empty state when no requests match search or filters -->
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-icon">🔍</div>
+        <h3 id="emptyTitle">No help requests found</h3>
+        <p id="emptyMessage">No requests match your current search and filter criteria. Try adjusting or resetting your filters.</p>
+        <button type="button" id="resetFiltersBtn" class="btn btn-secondary">Reset Filters</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p><strong>Campus Help Hub</strong> &bull; Built for college students to learn together</p>
+      <p class="footer-note">All requests are stored locally in browser memory for this session.</p>
+    </div>
+  </footer>
+
+  <!-- Link external JavaScript file -->
+  <script src="script.js"></script>
+</body>
+</html>
