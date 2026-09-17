@@ -538,7 +538,15 @@ categorySelect.addEventListener("change", () => {
 });
 
 // Initial render & counter calculation when page loads
-document.addEventListener("DOMContentLoaded", () => {
+function init() {
   updateCounters();
   applyFilters();
-});
+}
+
+if (typeof document !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+}
